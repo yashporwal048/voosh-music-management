@@ -55,8 +55,12 @@ const initTables = async () => {
     await pool.query(createFavoritesTable);
 
     console.log('All tables created successfully!');
-  } catch (err) {
-    console.log('Error creating tables: ' + err);
+  } catch (error) {
+    if (error instanceof AggregateError) {
+      console.error('Aggregate Error:', error.errors);
+    } else {
+      console.error('Error creating tables:', error);
+    }
   }
 };
 
