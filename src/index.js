@@ -1,6 +1,6 @@
 const express = require('express');
-const pool = require('./src/config/database');
-const initTables = require('./src/scripts/initTables')
+const pool = require('./config/database');
+const initTables = require('./scripts/initTables')
 require('dotenv').config();
 
 const app = express();
