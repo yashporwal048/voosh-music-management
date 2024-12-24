@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-
+console.log(process.env.DB_URL);
 const pool = new Pool({
     connectionString: process.env.DB_URL,
     ssl: { rejectUnauthorized: false } // Use SSL in production
