@@ -56,7 +56,7 @@ const initTables = async () => {
 
     console.log('All tables created successfully!');
   } catch (err) {
-    console.error('Error creating tables:', err.message);
+    console.error('Error creating tables:', JSON.stringify(err.message));
   }
 };
 
