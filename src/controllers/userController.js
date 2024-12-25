@@ -32,10 +32,10 @@ const getAllUsers = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({
-            status: 400,
+        return res.status(500).json({
+            status: 500,
             data: null,
-            message: 'Bad Request',
+            message: 'Server Error',
             error: null
         })
     }
@@ -104,10 +104,10 @@ const addUser = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({
-            status: 400,
+        return res.status(500).json({
+            status: 500,
             data: null,
-            message: 'Bad Request',
+            message: 'Server Error',
             error: null
         });
     }
@@ -154,19 +154,19 @@ const deleteUser = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({
-            status: 400,
+        return res.status(500).json({
+            status: 500,
             data: null,
-            message: 'Bad Request',
+            message: 'Server Error',
             error: null
         });
     }
 }
 
 const updateUser = async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
+    const { old_password, new_password } = req.body;
     const token = req.headers.authorization.split(' ')[1];
-    if (!oldPassword || !newPassword) {
+    if (!old_password || !new_password) {
         return res.status(400).json({
             status: 400,
             data: null,
@@ -194,7 +194,7 @@ const updateUser = async (req, res) => {
                 error: null
             });
         }
-        const verify_password = await bcrypt.compare(oldPassword, newPassword);
+        const verify_password = await bcrypt.compare(old_password, new_password);
         if (!verify_password) {
             return res.status(403).json({
                 status: 403,
@@ -203,7 +203,7 @@ const updateUser = async (req, res) => {
                 error: null
             });
         }
-        const hashedPassword = bcrypt.hash(newPassword, 10);
+        const hashedPassword = bcrypt.hash(new_password, 10);
 
         await UserModel.updateUser(decoded.email, hashedPassword);
         return res.status(204).json({
@@ -214,10 +214,10 @@ const updateUser = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({
-            status: 400,
+        return res.status(500).json({
+            status: 500,
             data: null,
-            message: 'Bad Request',
+            message: 'Server Error',
             error: null
         });
     }
