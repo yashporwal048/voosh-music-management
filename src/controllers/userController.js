@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const getAllUsers = async (req, res) => {
     const { limit = 5, offset = 0, role } = req.query;
