@@ -5,7 +5,7 @@ const createUser = async (email, password, role) => {
     const query = `
         INSERT INTO users (email, password, role) 
         VALUES ($1, $2, $3) 
-        RETURNING user_id, email, role, created_at;
+        RETURNING user_id, email, role;
     `;
     const values = [email, password, role];
     try {
