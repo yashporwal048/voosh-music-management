@@ -42,7 +42,7 @@ const getUsers = async({limit, offset, role}) => {
     let query = "Select * from users LIMIT $1 OFFSET $2";
     const values = [limit, offset];
     if(role){
-        query += 'Where role = $3';
+        query += ' WHERE role = $3';
         values.push(role);
     }
 
