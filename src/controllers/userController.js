@@ -194,6 +194,7 @@ const updateUser = async (req, res) => {
                 error: null
             });
         }
+        console.log(old_password, user, user.password);
         const verify_password = await bcrypt.compare(old_password, user.password);
         if (!verify_password) {
             return res.status(403).json({
