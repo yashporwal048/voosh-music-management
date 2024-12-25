@@ -185,7 +185,7 @@ const updateUser = async (req, res) => {
             });
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = UserModel.getUserByEmail(decoded.email);
+        const user = await UserModel.getUserByEmail(decoded.email);
         if (!user) {
             return res.status(404).json({
                 status: 404,
@@ -194,7 +194,7 @@ const updateUser = async (req, res) => {
                 error: null
             });
         }
-        console.log(old_password, user, user.password);
+
         const verify_password = await bcrypt.compare(old_password, user.password);
         if (!verify_password) {
             return res.status(403).json({
