@@ -1,5 +1,7 @@
 const express = require('express');
 const initTables = require('./scripts/initTables')
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes')
 require('dotenv').config();
 
 const app = express();
@@ -7,6 +9,8 @@ app.use(express.json());
 
 initTables();
 
+const BASE_URL = '/api/v1'
+app.use(BASE_URL, userRoutes);
 
 
 app.get('/', (req, res) => {
