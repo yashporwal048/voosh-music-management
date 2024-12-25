@@ -2,7 +2,7 @@ const UserModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
 const getAllUsers = async (req, res) => {
-    const { limit = 5, offset = 0, role } = req.query();
+    const { limit = 5, offset = 0, role } = req.query;
     try {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {

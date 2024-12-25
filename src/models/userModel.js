@@ -1,5 +1,4 @@
 const pool = require('../config/database');
-const { deleteUser } = require('../controllers/userController');
 
 // Function to create a new user
 const createUser = async (email, password, role) => {
