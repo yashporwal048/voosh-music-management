@@ -10,7 +10,7 @@ app.use(express.json());
 initTables();
 
 const BASE_URL = '/api/v1'
-app.use(BASE_URL, userRoutes);
+app.use(BASE_URL, authRoutes);
 
 
 app.get('/', (req, res) => {
