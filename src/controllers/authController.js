@@ -84,8 +84,8 @@ const loginUser = async (req, res) => {
         // Compare passwords
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(400).json({ 
-                status: 400, 
+            return res.status(401).json({ 
+                status: 401, 
                 message: 'Invalid password.', 
                 data: null, 
                 error: null 
@@ -122,9 +122,9 @@ const logoutUser = async (req, res) => {
 
     // If no token is provided
     if (!token) {
-        return res.status(404).json({
-            status: 404,
-            message: 'Bad Request.',
+        return res.status(400).json({
+            status: 400,
+            message: 'Bad Request',
             data: null,
             error: null
         });
@@ -141,9 +141,9 @@ const logoutUser = async (req, res) => {
             error: null
         });
     } catch (error) {
-        return res.status(401).json({
-            status: 401,
-            message: 'Invalid Token.',
+        return res.status(500).json({
+            status: 500,
+            message: 'Bad request, Invalid Token.',
             data: null,
             error: error.message
         });
