@@ -38,38 +38,40 @@ const getUserCount = async () => {
     }
 };
 
-const getUsers = async({limit, offset, role}) => {
-    let query = "Select * from users LIMIT $1 OFFSET $2";
-    const values = [limit, offset];
-    if(role){
-        query += ' WHERE role = $3';
+const getUsers = async ({ limit, offset, role }) => {
+    let query = 'SELECT * FROM users';
+    const values = [];
+    let counter = 1;
+    if (role) {
+        query += ' WHERE role = $' + counter++;
         values.push(role);
     }
-
+    query += ` LIMIT $${counter++} OFFSET $${counter}`;
+    values.push(limit, offset);
     try {
         const result = await pool.query(query, values);
         return result.rows;
-    } catch(error){
+    } catch (error) {
         throw error
     }
 }
 
-const deleteUserById = async(id) => {
+const deleteUserById = async (id) => {
     const query = 'DELETE FROM users WHERE user_id = $1';
     try {
         const result = await pool.query(query, [id]);
         return result.rowCount > 0;
-    } catch(error){
+    } catch (error) {
         throw error;
     }
 }
 
-const updateUser = async(email, newPassword) => {
+const updateUser = async (email, newPassword) => {
     const query = 'Update users SET password = $1 where email = $2 RETURNING *';
-    try{
+    try {
         const result = await pool.query(query, [newPassword, email]);
         return result.rows[0];
-    } catch(error){
+    } catch (error) {
         throw error;
     }
 }
