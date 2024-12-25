@@ -194,7 +194,7 @@ const updateUser = async (req, res) => {
                 error: null
             });
         }
-        const verify_password = await bcrypt.compare(old_password, decoded.password);
+        const verify_password = await bcrypt.compare(old_password, user.password);
         if (!verify_password) {
             return res.status(403).json({
                 status: 403,
