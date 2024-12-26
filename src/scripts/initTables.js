@@ -54,8 +54,6 @@ const initTables = async () => {
     UNIQUE (user_id, category, item_id)
     );`;
 
-    await pool.query('drop table if exists tracks');
-    await pool.query('drop table if exists albums');
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
