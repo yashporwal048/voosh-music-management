@@ -69,6 +69,7 @@ const addArtist = async (req, res) => {
             error: null,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             status: 500,
             data: null,
@@ -96,6 +97,7 @@ const updateArtist = async (req, res) => {
 
         res.status(204).send(); // No content
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             status: 500,
             data: null,
@@ -127,6 +129,7 @@ const deleteArtist = async (req, res) => {
             error: null,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             status: 500,
             data: null,
