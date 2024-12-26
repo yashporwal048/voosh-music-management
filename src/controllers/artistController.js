@@ -24,8 +24,8 @@ const getArtists = async (req, res) => {
 const getArtistById = async (req, res) => {
     try {
         const { id } = req.params;
-        const artists = await artistModel.getArtistById(id);
-        if (!artists) {
+        const artist = await artistModel.getArtistById(id);
+        if (!artist) {
             return res.status(404).json({
                 status: 404,
                 data: null,
