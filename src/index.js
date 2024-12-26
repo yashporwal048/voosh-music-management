@@ -4,6 +4,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const artistRoutes = require('./routes/artistRoutes');
 const albumRoutes = require('./routes/albumRoutes');
+const trackRoutes = require('./routes/trackRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(BASE_URL, authRoutes);
 app.use(`${BASE_URL}/users`, userRoutes);
 app.use(`${BASE_URL}/artists`, artistRoutes);
 app.use(`${BASE_URL}/albums`, albumRoutes);
+app.use(`${BASE_URL}/tracks`, trackRoutes);
 
 
 app.get('/', (req, res) => {
