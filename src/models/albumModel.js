@@ -91,10 +91,10 @@ const deleteAlbum = async (id) => {
     return rows[0];
 };
 
-const checkArtistExists = async (artist_id) => {
-    const query = `SELECT 1 FROM artists WHERE artist_id = $1 LIMIT 1;`;
-    const result = await pool.query(query, [artist_id]);
-    return result.rowCount > 0;
+const checkAlbumExists = async (album_id) => {
+    const query = `SELECT album_id FROM albums WHERE album_id = $1;`;
+    const { rows } = await pool.query(query, [album_id]);
+    return rows.length > 0;
 };
 
 module.exports = {
@@ -103,5 +103,5 @@ module.exports = {
     addAlbum,
     updateAlbum,
     deleteAlbum,
-    checkArtistExists
+    checkAlbumExists
 };

@@ -1,4 +1,6 @@
 const TrackModel = require('../models/trackModel');
+const artistModel = require('../models/artistModel');
+const albumModel = require('../models/albumModel');
 
 const getAllTracks = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, album_id, hidden } = req.query;
@@ -73,7 +75,30 @@ const addTrack = async (req, res) => {
     const { artist_id, album_id, name, duration, hidden } = req.body;
 
     try {
+        // Validate that the artist exists
+        const artistExists = await artistModel.checkArtistExists(artist_id);
+        if (!artistExists) {
+            return res.status(404).json({
+                status: 404,
+                data: null,
+                message: 'Artist not found.',
+                error: null,
+            });
+        }
+
+        // Validate that the album exists
+        const albumExists = await albumModel.checkAlbumExists(album_id);
+        if (!albumExists) {
+            return res.status(404).json({
+                status: 404,
+                data: null,
+                message: 'Album not found.',
+                error: null,
+            });
+        }
+
         await TrackModel.addTrack({ artist_id, album_id, name, duration, hidden });
+
         return res.status(201).json({
             status: 201,
             data: null,
@@ -90,6 +115,7 @@ const addTrack = async (req, res) => {
         });
     }
 };
+
 
 const updateTrack = async (req, res) => {
     const { id } = req.params;

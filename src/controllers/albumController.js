@@ -1,4 +1,5 @@
 const AlbumModel = require('../models/albumModel');
+const artistModel = require('../models/artistModel');
 
 const getAllAlbums = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, hidden } = req.query;
@@ -23,7 +24,7 @@ const getAllAlbums = async (req, res) => {
 
     try {
         if (artist_id) {
-            const artistExists = await AlbumModel.checkArtistExists(artist_id); // Implement this in the model
+            const artistExists = await artistModel.checkArtistExists(artist_id); // Implement this in the model
             if (!artistExists) {
                 return res.status(404).json({
                     status: 404,
