@@ -4,18 +4,25 @@ const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
     const conditions = [];
     const values = [];
     if (artist_id) {
-        conditions.push('artist_id = $' + (values.length + 1));
+        conditions.push('a.artist_id = $' + (values.length + 1));
         values.push(artist_id);
     }
     if (hidden !== undefined) {
-        conditions.push('hidden = $' + (values.length + 1));
+        conditions.push('a.hidden = $' + (values.length + 1));
         values.push(hidden);
     }
     const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
     const query = `
-        SELECT * FROM albums 
-        ${whereClause} 
-        LIMIT $${values.length + 1} 
+        SELECT 
+            a.album_id, 
+            a.name AS album_name, 
+            a.year, 
+            a.hidden, 
+            ar.name AS artist_name
+        FROM albums a
+        JOIN artists ar ON a.artist_id = ar.artist_id
+        ${whereClause}
+        LIMIT $${values.length + 1}
         OFFSET $${values.length + 2};
     `;
     values.push(limit, offset);
@@ -23,11 +30,23 @@ const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
     return rows;
 };
 
+
 const getAlbumById = async (id) => {
-    const query = `SELECT * FROM albums WHERE album_id = $1;`;
+    const query = `
+        SELECT 
+            a.album_id, 
+            a.name AS album_name, 
+            a.year, 
+            a.hidden, 
+            ar.name AS artist_name
+        FROM albums a
+        JOIN artists ar ON a.artist_id = ar.artist_id
+        WHERE a.album_id = $1;
+    `;
     const { rows } = await pool.query(query, [id]);
     return rows[0];
 };
+
 
 const addAlbum = async ({ artist_id, name, year, hidden }) => {
     const query = `
