@@ -6,8 +6,8 @@ const authorize = require('../middlewares/authorize');
 
 router.get('/', trackController.getAllTracks);
 router.get('/:id', trackController.getTrackById);
-router.post('/add-track', authenticate,authorize(['Admin','Editor']),trackController.addTrack);
-router.put('/:id',authenticate,authorize(['Admin','Editor']), trackController.updateTrack);
-router.delete('/:id',authenticate,authorize(['Admin','Editor']), trackController.deleteTrack);
+router.post('/add-track', authenticate, authorize(['Admin', 'Editor']), trackController.addTrack);
+router.put('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.updateTrack);
+router.delete('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.deleteTrack);
 
 module.exports = router;

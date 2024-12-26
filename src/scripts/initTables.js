@@ -47,23 +47,16 @@ const initTables = async () => {
 
     const createFavoritesTable = `
       CREATE TABLE IF NOT EXISTS favorites (
-          favorite_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          user_id UUID REFERENCES users(user_id),
-          track_id UUID REFERENCES tracks(track_id)
-      );
-    `;
-    await pool.query('Drop table if exists favorites');
-    await pool.query(`CREATE TABLE IF NOT EXISTS favorites (
     favorite_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     category VARCHAR(50) NOT NULL CHECK (category IN ('artist', 'album', 'track')),
     item_id UUID NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (user_id, category, item_id),
     CONSTRAINT fk_item_id_artist FOREIGN KEY (item_id) REFERENCES artists(artist_id) ON DELETE CASCADE,
     CONSTRAINT fk_item_id_album FOREIGN KEY (item_id) REFERENCES albums(album_id) ON DELETE CASCADE,
     CONSTRAINT fk_item_id_track FOREIGN KEY (item_id) REFERENCES tracks(track_id) ON DELETE CASCADE
-    );`)
+    );`;
+    await pool.query('drop table if not exists favorites');
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
