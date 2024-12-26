@@ -1,4 +1,4 @@
-const pool = require('../db/connection');
+const pool = require('../config/database');
 
 const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
     const conditions = [];
