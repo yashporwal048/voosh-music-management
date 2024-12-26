@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const favoritesController = require('../controllers/favoritesController');
-const authenticate = require('../middleware/authenticate');
+const authenticate = require('../middlewares/authenticate');
 
 router.get('/:category', authenticate, favoritesController.getFavorites);
 
