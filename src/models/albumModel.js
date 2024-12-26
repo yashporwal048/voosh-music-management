@@ -15,7 +15,7 @@ const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
     const query = `
         SELECT 
             a.album_id, 
-            a.name AS album_name, 
+            a.name AS name, 
             a.year, 
             a.hidden, 
             ar.name AS artist_name
@@ -35,7 +35,7 @@ const getAlbumById = async (id) => {
     const query = `
         SELECT 
             a.album_id, 
-            a.name AS album_name, 
+            a.name AS name, 
             a.year, 
             a.hidden, 
             ar.name AS artist_name
@@ -58,9 +58,10 @@ const addAlbum = async ({ artist_id, name, year, hidden }) => {
     return rows[0];
 };
 
-const updateAlbum = async (id, { name, year, hidden }) => {
+const updateAlbum = async (id, updates) => {
     const updates = [];
     const values = [];
+    const { name, year, hidden } = updates
     if (name) {
         updates.push('name = $' + (values.length + 1));
         values.push(name);

@@ -144,7 +144,7 @@ const updateAlbum = async (req, res) => {
         }
     });
     try {
-        const updated = await AlbumModel.updateAlbum(id, { name, year, hidden });
+        const updated = await AlbumModel.updateAlbum(id, updates);
         if (!updated) {
             return res.status(404).json({
                 status: 404,
