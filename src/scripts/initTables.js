@@ -27,7 +27,7 @@ const initTables = async () => {
     year INTEGER NOT NULL CHECK (year > 0),
     hidden BOOLEAN DEFAULT FALSE,
     artist_id UUID NOT NULL,
-    CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE
+    CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE,
     CONSTRAINT unique_artist_album UNIQUE (artist_id, name)
 );
     `;
@@ -41,7 +41,7 @@ const initTables = async () => {
       album_id UUID NOT NULL,
       artist_id UUID NOT NULL,
       CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES albums (album_id) ON DELETE CASCADE,
-      CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE
+      CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE,
       CONSTRAINT unique_track_artist_album UNIQUE (artist_id, album_id, name)
   );`;
 
