@@ -56,7 +56,7 @@ const initTables = async () => {
     CONSTRAINT fk_item_id_album FOREIGN KEY (item_id) REFERENCES albums(album_id) ON DELETE CASCADE,
     CONSTRAINT fk_item_id_track FOREIGN KEY (item_id) REFERENCES tracks(track_id) ON DELETE CASCADE
     );`;
-    await pool.query('drop table if not exists favorites');
+    await pool.query('drop table if exists favorites');
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
