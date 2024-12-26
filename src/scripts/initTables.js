@@ -35,12 +35,15 @@ const initTables = async () => {
 
     const createTracksTable = `
       CREATE TABLE IF NOT EXISTS tracks (
-          track_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          name VARCHAR(255) NOT NULL,
-          duration INTEGER CHECK (duration >= 0),
-          hidden BOOLEAN DEFAULT FALSE
-      );
-    `;
+      track_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name VARCHAR(255) NOT NULL,
+      duration INTEGER CHECK (duration >= 0),
+      hidden BOOLEAN DEFAULT FALSE,
+      album_id UUID NOT NULL,
+      artist_id UUID NOT NULL,
+      CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES albums (album_id) ON DELETE CASCADE,
+      CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE
+  );`;
 
     const createFavoritesTable = `
       CREATE TABLE IF NOT EXISTS favorites (
@@ -49,7 +52,14 @@ const initTables = async () => {
           track_id UUID REFERENCES tracks(track_id)
       );
     `;
-
+    await pool.query('ALTER TABLE tracks ADD COLUMN album_id UUID NOT NULL;')
+    await pool.query('ALTER TABLE tracks ADD COLUMN artist_id UUID NOT NULL;');
+    await pool.query(`ALTER TABLE tracks 
+ADD CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES albums (album_id) ON DELETE CASCADE;
+`)
+    await pool.query(`ALTER TABLE tracks 
+ADD CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE;
+`)
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
