@@ -123,15 +123,15 @@ const updateUser = async (req, res) => {
             });
         }
 
-        // const isPasswordValid = await bcrypt.compare(old_password, user.password);
-        // if (!isPasswordValid) {
-        //     return res.status(403).json({
-        //         status: 403,
-        //         data: null,
-        //         message: 'Forbidden Access: Incorrect old password.',
-        //         error: null,
-        //     });
-        // }
+        const isPasswordValid = await bcrypt.compare(old_password, user.password);
+        if (!isPasswordValid) {
+            return res.status(403).json({
+                status: 403,
+                data: null,
+                message: 'Forbidden Access: Incorrect old password.',
+                error: null,
+            });
+        }
 
         const hashedPassword = await bcrypt.hash(new_password, 10);
         console.log(hashedPassword)
