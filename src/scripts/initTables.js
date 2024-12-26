@@ -50,13 +50,6 @@ const initTables = async () => {
       );
     `;
 
-    await pool.query(`ALTER TABLE albums
-    ADD COLUMN artist_id UUID NOT NULL;`)
-    await pool.query(`ALTER TABLE albums
-    ADD CONSTRAINT fk_artist
-    FOREIGN KEY (artist_id)
-    REFERENCES artists (artist_id)
-    ON DELETE CASCADE;`)
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
