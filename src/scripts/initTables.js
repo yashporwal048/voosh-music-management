@@ -2,8 +2,6 @@ const pool = require('../config/database');
 const initTables = async () => {
 
   try {
-    console.log('Creating tables if not created...');
-
     const createUsersTable = `
       CREATE TABLE IF NOT EXISTS users (
           user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -30,6 +28,7 @@ const initTables = async () => {
     hidden BOOLEAN DEFAULT FALSE,
     artist_id UUID NOT NULL,
     CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE
+    CONSTRAINT unique_artist_album UNIQUE (artist_id, name)
 );
     `;
 
@@ -43,6 +42,7 @@ const initTables = async () => {
       artist_id UUID NOT NULL,
       CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES albums (album_id) ON DELETE CASCADE,
       CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists (artist_id) ON DELETE CASCADE
+      CONSTRAINT unique_track_artist_album UNIQUE (artist_id, album_id, name)
   );`;
 
     const createFavoritesTable = `
@@ -54,7 +54,8 @@ const initTables = async () => {
     UNIQUE (user_id, category, item_id)
     );`;
 
-    await pool.query('drop table if exists favorites');
+    await pool.query('drop table if exists tracks');
+    await pool.query('drop table if exists albums');
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
