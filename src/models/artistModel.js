@@ -62,8 +62,8 @@ const updateArtist = async (id, updates) => {
 
 const deleteArtist = async (id) => {
     const query = `DELETE FROM artists WHERE artist_id = $1 RETURNING *;`;
-    const { rowCount } = await pool.query(query, [id]);
-    return rowCount > 0;
+    const rows = await pool.query(query, [id]);
+    return rows[0];
 };
 
 module.exports = { getArtists, getArtistById, addArtist, updateArtist, deleteArtist }
