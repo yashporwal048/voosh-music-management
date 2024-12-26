@@ -1,6 +1,7 @@
 const pool = require('../config/database');
 
 const getFavorites = async ({ userId, category, limit, offset }) => {
+    console.log(userId, category, limit, offset);
     const query = `
         SELECT 
             favorite_id,
