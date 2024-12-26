@@ -1,6 +1,5 @@
 const pool = require('../config/database');
 
-// Function to create a new user
 const createUser = async (email, password, role) => {
     const query = `
         INSERT INTO users (email, password, role) 
@@ -16,7 +15,6 @@ const createUser = async (email, password, role) => {
     }
 };
 
-// Function to get a user by email
 const getUserByEmail = async (email) => {
     const query = 'SELECT * FROM users WHERE email = $1';
     try {
@@ -27,7 +25,6 @@ const getUserByEmail = async (email) => {
     }
 };
 
-// Function to get the total number of users
 const getUserCount = async () => {
     const query = 'SELECT COUNT(*) AS count FROM users';
     try {

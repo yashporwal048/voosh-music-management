@@ -24,7 +24,7 @@ const getAllAlbums = async (req, res) => {
 
     try {
         if (artist_id) {
-            const artistExists = await artistModel.checkArtistExists(artist_id); // Implement this in the model
+            const artistExists = await artistModel.checkArtistExists(artist_id);
             if (!artistExists) {
                 return res.status(404).json({
                     status: 404,
@@ -35,7 +35,6 @@ const getAllAlbums = async (req, res) => {
             }
         }
 
-        // Fetch albums from the database
         const albums = await AlbumModel.getAllAlbums({
             limit: Number(limit),
             offset: Number(offset),

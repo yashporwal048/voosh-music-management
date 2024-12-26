@@ -19,7 +19,6 @@ const getFavorites = async ({ userId, category, limit, offset }) => {
     return rows;
 };
 
-// Check if an item exists
 const checkItemExists = async (category, itemId) => {
     const table = category === 'artist' ? 'artists' : category === 'album' ? 'albums' : 'tracks';
     const query = `SELECT 1 FROM ${table} WHERE ${table.slice(0, -1)}_id = $1;`;
@@ -27,7 +26,6 @@ const checkItemExists = async (category, itemId) => {
     return rows.length > 0;
 };
 
-// Add a new favorite
 const addFavorite = async ({ userId, category, item_id }) => {
     const query = `
         INSERT INTO favorites (user_id, category, item_id)
@@ -36,7 +34,6 @@ const addFavorite = async ({ userId, category, item_id }) => {
     await pool.query(query, [userId, category, item_id]);
 };
 
-// Get a favorite by ID
 const getFavoriteById = async (id) => {
     const query = `
         SELECT * FROM favorites WHERE favorite_id = $1;
@@ -45,7 +42,6 @@ const getFavoriteById = async (id) => {
     return rows[0];
 };
 
-// Remove a favorite
 const removeFavorite = async (id) => {
     const query = `
         DELETE FROM favorites WHERE favorite_id = $1;

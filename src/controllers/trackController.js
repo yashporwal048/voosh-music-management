@@ -75,7 +75,6 @@ const addTrack = async (req, res) => {
     const { artist_id, album_id, name, duration, hidden } = req.body;
 
     try {
-        // Validate that the artist exists
         const artistExists = await artistModel.checkArtistExists(artist_id);
         if (!artistExists) {
             return res.status(404).json({
@@ -86,7 +85,6 @@ const addTrack = async (req, res) => {
             });
         }
 
-        // Validate that the album exists
         const albumExists = await albumModel.checkAlbumExists(album_id);
         if (!albumExists) {
             return res.status(404).json({

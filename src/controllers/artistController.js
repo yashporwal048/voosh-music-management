@@ -122,7 +122,7 @@ const updateArtist = async (req, res) => {
             });
         }
 
-        res.status(204).send(); // No content
+        res.status(204).send();
     } catch (error) {
         console.log(error);
         res.status(500).json({
