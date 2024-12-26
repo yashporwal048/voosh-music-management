@@ -41,6 +41,7 @@ const getArtistById = async (req, res) => {
             error: null,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             status: 500,
             data: null,

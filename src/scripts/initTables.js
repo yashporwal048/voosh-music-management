@@ -48,17 +48,6 @@ const initTables = async () => {
       );
     `;
 
-    console.log("Dropping old grammy column...");
-    await pool.query(`
-            ALTER TABLE artists DROP COLUMN grammy;
-        `);
-
-    // Step 2: Add a new `grammy` column with INTEGER type
-    console.log("Adding new grammy column...");
-    await pool.query(`
-            ALTER TABLE artists ADD COLUMN grammy INTEGER NOT NULL DEFAULT 0;
-        `);
-
     await pool.query(createUsersTable);
     await pool.query(createArtistsTable);
     await pool.query(createAlbumsTable);
