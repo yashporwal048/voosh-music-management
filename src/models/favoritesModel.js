@@ -10,8 +10,7 @@ const getFavorites = async ({ userId, category, limit, offset }) => {
                 WHEN category = 'artist' THEN (SELECT name FROM artists WHERE artist_id = item_id)
                 WHEN category = 'album' THEN (SELECT name FROM albums WHERE album_id = item_id)
                 WHEN category = 'track' THEN (SELECT name FROM tracks WHERE track_id = item_id)
-            END AS name,
-            created_at
+            END AS name
         FROM favorites
         WHERE user_id = $1 AND category = $2
         LIMIT $3 OFFSET $4;
