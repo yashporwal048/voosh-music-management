@@ -62,7 +62,7 @@ const updateArtist = async (id, updates) => {
 
 const deleteArtist = async (id) => {
     const query = `DELETE FROM artists WHERE artist_id = $1 RETURNING *;`;
-    const { rews } = await pool.query(query, [id]);
+    const { rows } = await pool.query(query, [id]);
     return rows[0];
 };
 
