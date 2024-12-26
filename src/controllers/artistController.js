@@ -3,6 +3,14 @@ const artistModel = require('../models/artistModel');
 const getArtists = async (req, res) => {
     try {
         const { limit = 5, offset = 0, grammy, hidden } = req.query;
+        if (isNaN(limit) || isNaN(offset)) {
+            return res.status(400).json({
+                status: 400,
+                data: null,
+                message: 'Bad Request: limit and offset must be numeric.',
+                error: null,
+            });
+        }
         const filters = { grammy, hidden };
         const artists = await artistModel.getArtists({ limit, offset, filters });
         res.status(200).json({
@@ -85,7 +93,7 @@ const updateArtist = async (req, res) => {
         const { id } = req.params;
         const updates = req.body;
         Object.keys(updates).forEach((key) => {
-            if(!['name', 'grammy','hidden'].includes(key)){
+            if (!['name', 'grammy', 'hidden'].includes(key)) {
                 return res.status(400).json({
                     status: 400,
                     data: null,
@@ -94,7 +102,7 @@ const updateArtist = async (req, res) => {
                 });
             }
         });
-        if(!updates){
+        if (!updates) {
             return res.status(400).json({
                 status: 400,
                 data: null,

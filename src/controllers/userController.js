@@ -3,6 +3,14 @@ const bcrypt = require('bcrypt');
 
 const getAllUsers = async (req, res) => {
     const { limit = 5, offset = 0, role } = req.query;
+    if (isNaN(limit) || isNaN(offset)) {
+        return res.status(400).json({
+            status: 400,
+            data: null,
+            message: 'Bad Request: limit and offset must be numeric.',
+            error: null,
+        });
+    }
     try {
         const users = await UserModel.getUsers({ limit, offset, role });
         return res.status(200).json({
