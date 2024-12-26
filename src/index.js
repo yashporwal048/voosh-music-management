@@ -1,7 +1,8 @@
 const express = require('express');
 const initTables = require('./scripts/initTables')
 const userRoutes = require('./routes/userRoutes');
-const authRoutes = require('./routes/authRoutes')
+const authRoutes = require('./routes/authRoutes');
+const artistRoutes = require('./routes/artistRoutes')
 require('dotenv').config();
 
 const app = express();
