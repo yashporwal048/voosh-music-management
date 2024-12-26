@@ -60,4 +60,10 @@ const updateArtist = async (id, updates) => {
     return rowCount > 0;
 };
 
-module.exports = { getArtists, getArtistById, addArtist, updateArtist }
+const deleteArtist = async (id) => {
+    const query = `DELETE FROM artists WHERE artist_id = $1 RETURNING artist_id;`;
+    const { rowCount } = await db.query(query, [id]);
+    return rowCount > 0;
+};
+
+module.exports = { getArtists, getArtistById, addArtist, updateArtist, deleteArtist }
