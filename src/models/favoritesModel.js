@@ -24,6 +24,7 @@ const getFavorites = async ({ userId, category, limit, offset }) => {
 const checkItemExists = async (category, itemId) => {
     const table = category === 'artist' ? 'artists' : category === 'album' ? 'albums' : 'tracks';
     const query = `SELECT 1 FROM ${table} WHERE ${table.slice(0, -1)}_id = $1;`;
+    console.log(itemId);
     const { rows } = await pool.query(query, [itemId]);
     return rows.length > 0;
 };
