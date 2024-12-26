@@ -3,7 +3,7 @@ const FavoritesModel = require('../models/favoritesModel');
 const getFavorites = async (req, res) => {
     const { category } = req.params;
     const { limit = 5, offset = 0 } = req.query;
-    const userId = req.user.id;
+    const userId = req.user.user_id;
 
     try {
         if (!['artist', 'album', 'track'].includes(category)) {
@@ -45,7 +45,7 @@ const getFavorites = async (req, res) => {
 
 const addFavorite = async (req, res) => {
     const { category, item_id } = req.body;
-    const userId = req.user.id;
+    const userId = req.user.user_id;
 
     try {
         if (!['artist', 'album', 'track'].includes(category)) {
