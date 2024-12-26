@@ -12,6 +12,7 @@ initTables();
 const BASE_URL = '/api/v1'
 app.use(BASE_URL, authRoutes);
 app.use(`${BASE_URL}/users`, userRoutes);
+app.use(`${BASE_URL}/artists`, userRoutes);
 
 
 app.get('/', (req, res) => {
