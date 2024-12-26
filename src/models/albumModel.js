@@ -58,10 +58,10 @@ const addAlbum = async ({ artist_id, name, year, hidden }) => {
     return rows[0];
 };
 
-const updateAlbum = async (id, updates) => {
+const updateAlbum = async (id, update) => {
     const updates = [];
     const values = [];
-    const { name, year, hidden } = updates
+    const { name, year, hidden } = update;
     if (name) {
         updates.push('name = $' + (values.length + 1));
         values.push(name);
