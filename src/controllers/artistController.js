@@ -84,6 +84,14 @@ const updateArtist = async (req, res) => {
     try {
         const { id } = req.params;
         const updates = req.body;
+        if(!updates){
+            res.status(400).json({
+                status: 400,
+                data: null,
+                message: 'Bad request: nothing to update!',
+                error: null,
+            });
+        }
 
         const updated = await artistModel.updateArtist(id, updates);
 
