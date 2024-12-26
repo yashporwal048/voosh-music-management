@@ -134,7 +134,6 @@ const updateUser = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(new_password, 10);
-        console.log(hashedPassword)
         await UserModel.updateUser(req.user.email, hashedPassword);
         return res.status(204).json({
             status: 204,
