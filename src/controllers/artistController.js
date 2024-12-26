@@ -8,7 +8,7 @@ const getArtists = async (req, res) => {
         res.status(200).json({
             status: 200,
             data: artists,
-            message: 'Artists fetched successfully',
+            message: 'Artists retrieved successfully',
             error: null
         })
     } catch (error) {
