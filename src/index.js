@@ -6,6 +6,7 @@ const artistRoutes = require('./routes/artistRoutes');
 const albumRoutes = require('./routes/albumRoutes');
 const trackRoutes = require('./routes/trackRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes')
+require('./listeners/favoriteListener');
 require('dotenv').config();
 
 const app = express();

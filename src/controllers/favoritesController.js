@@ -1,4 +1,5 @@
 const FavoritesModel = require('../models/favoritesModel');
+const eventEmitter = require('../config/events')
 
 const getFavorites = async (req, res) => {
     const { category } = req.params;
@@ -69,12 +70,14 @@ const addFavorite = async (req, res) => {
 
         await FavoritesModel.addFavorite({ userId, category, item_id });
 
-        return res.status(201).json({
+
+        res.status(201).json({
             status: 201,
             data: null,
             message: 'Favorite added successfully.',
             error: null,
         });
+        eventEmitter.emit('favoriteAdded', userId, category, item_id);
     } catch (error) {
         console.error(error);
         return res.status(500).json({
