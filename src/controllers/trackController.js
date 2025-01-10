@@ -1,6 +1,35 @@
 const TrackModel = require('../models/trackModel');
 const artistModel = require('../models/artistModel');
 const albumModel = require('../models/albumModel');
+const multer = require('multer');
+const path = require('path');
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); //save file to uploads
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Unique file names
+    },
+})
+
+const upload = multer({ storage: storage });
+
+const importTracks = (req, res) => {
+    const { file } = req;
+
+    if (!file) {
+        return res.status(400).json({ error: 'No file uploaded!' });
+    }
+
+    TrackModel.importTracksFromCSV(file.path)
+    .then((message)=>{
+        res.status(200).json({message})
+    }).catch((error)=>{
+        res.status(500).json({ error: 'Failed to import tracks', message: error.message });x
+    })
+}
 
 const getAllTracks = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, album_id, hidden } = req.query;
@@ -198,4 +227,6 @@ module.exports = {
     addTrack,
     updateTrack,
     deleteTrack,
+    importTracks,
+    upload
 };

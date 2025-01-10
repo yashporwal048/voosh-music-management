@@ -9,5 +9,6 @@ router.get('/:id', trackController.getTrackById);
 router.post('/add-track', authenticate, authorize(['Admin', 'Editor']), trackController.addTrack);
 router.put('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.updateTrack);
 router.delete('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.deleteTrack);
+router.post('/import-tracks', authenticate, authorize(['Admin', 'Editor']), trackController.upload.single('csvFile'), trackController.importTracks);
 
 module.exports = router;

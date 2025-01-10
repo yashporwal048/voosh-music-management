@@ -1,4 +1,40 @@
 const pool = require('../config/database');
+const fs = require('fs');
+const csv = require('csv-parser');
+
+const importTracksFromCsv = (filePath) => {
+    const results = [];
+
+    fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('data', (row) => {
+            results.push({
+                artist_id: row.artist_id,
+                album_id: row.album_id,
+                name: row.name,
+                duration: parseInt(row.duration),
+                hidden: row.hidden === 'true', // Assume hidden is a boolean value
+            })
+
+        })
+        .on('end', async () => {
+            try {
+                for (let track of result) {
+                    const query = `
+                    INSERT INTO tracks (artist_id, album_id, name, duration, hidden)
+                    VALUES ($1, $2, $3, $4, $5);
+                  `;
+                    await pool.query(query, [track.artist_id, track.album_id, track.name, track.duration, track.hidden]);
+                }
+                resolve('Tracks successfully imported!');
+            } catch (err) {
+                reject(err);
+            }
+        })
+        .on('error', (err) => {
+            reject(err);
+        });
+}
 
 const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
     const conditions = [];
@@ -38,6 +74,7 @@ const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
 
 const getTrackById = async (id) => {
     const query = `
+        EXPLAIN ANALYZE
         SELECT 
             t.track_id, 
             t.name, 
@@ -81,6 +118,7 @@ const deleteTrack = async (id) => {
 };
 
 module.exports = {
+    importTracksFromCSV,
     getAllTracks,
     getTrackById,
     addTrack,
