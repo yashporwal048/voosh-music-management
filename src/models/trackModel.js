@@ -118,7 +118,7 @@ const deleteTrack = async (id) => {
 };
 
 module.exports = {
-    importTracksFromCSV,
+    importTracksFromCsv,
     getAllTracks,
     getTrackById,
     addTrack,
