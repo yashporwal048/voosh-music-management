@@ -1,6 +1,7 @@
 const pool = require('../config/database');
 const fs = require('fs');
 const csv = require('csv-parser');
+const redisClient = require('../config/redis')
 
 const importTracksFromCsv = (filePath) => {
     const results = [];
