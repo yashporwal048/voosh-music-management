@@ -3,6 +3,10 @@ const artistModel = require('../models/artistModel');
 const albumModel = require('../models/albumModel');
 const multer = require('multer');
 const path = require('path');
+const redisClient = require('../config/redis');
+// const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.setex).bind(client);
+const delAsync = promisify(client.del).bind(client)
 
 
 const storage = multer.diskStorage({
@@ -24,15 +28,17 @@ const importTracks = (req, res) => {
     }
 
     TrackModel.importTracksFromCSV(file.path)
-    .then((message)=>{
-        res.status(200).json({message})
-    }).catch((error)=>{
-        res.status(500).json({ error: 'Failed to import tracks', message: error.message });x
-    })
+        .then((message) => {
+            res.status(200).json({ message })
+        }).catch((error) => {
+            res.status(500).json({ error: 'Failed to import tracks', message: error.message }); x
+        })
 }
 
 const getAllTracks = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, album_id, hidden } = req.query;
+    const cacheKey = `tracks:${limit}:${offset}:${artist_id || ''}:${album_id || ''}:${hidden || ''}`;
+
     if (isNaN(limit) || isNaN(offset)) {
         return res.status(400).json({
             status: 400,
@@ -42,22 +48,34 @@ const getAllTracks = async (req, res) => {
         });
     }
     try {
-        const tracks = await TrackModel.getAllTracks({ limit, offset, artist_id, album_id, hidden });
-        if (!tracks || tracks.length === 0) {
-            return res.status(404).json({
-                status: 404,
-                data: null,
-                message: 'No tracks found.',
-                error: null,
-            });
-        }
+        redisClient.get(cacheKey, async (err, cachedData) => {
+            if (cachedData) {
+                return res.status(200).json({
+                    status: 200,
+                    data: JSON.parse(cachedData),
+                    message: 'Data retrieved from cache',
+                    error: null
+                })
+            } else {
+                const tracks = await TrackModel.getAllTracks({ limit, offset, artist_id, album_id, hidden });
+                if (!tracks || tracks.length === 0) {
+                    return res.status(404).json({
+                        status: 404,
+                        data: null,
+                        message: 'No tracks found.',
+                        error: null,
+                    });
+                }
+                await setAsync(cacheKey, 60, JSON.stringify(tracks));
 
-        return res.status(200).json({
-            status: 200,
-            data: tracks,
-            message: 'Tracks retrieved successfully.',
-            error: null,
-        });
+                return res.status(200).json({
+                    status: 200,
+                    data: tracks,
+                    message: 'Tracks retrieved successfully.',
+                    error: null,
+                });
+            }
+        })
     } catch (error) {
         console.error(error);
         return res.status(500).json({
@@ -171,6 +189,8 @@ const updateTrack = async (req, res) => {
                 error: null,
             });
         }
+        const cacheKey = `tracks:*`
+        await delAsync(cacheKey);
 
         return res.status(204).json({
             status: 204,
