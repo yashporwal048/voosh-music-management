@@ -77,7 +77,7 @@ const initTables = async () => {
     `
 
     const createTrigger = `
-    CREATE TRIGGER track_changes_trigger
+    CREATE OR REPLACE TRIGGER track_changes_trigger
     AFTER INSERT OR UPDATE OR DELETE ON tracks
     FOR EACH ROW
     EXECUTE FUNCTION log_track_changes();
