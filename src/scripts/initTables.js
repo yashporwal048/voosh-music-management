@@ -84,15 +84,15 @@ const initTables = async () => {
     `
 
     const createProcedureForTotalDuration = `
-    CREATE OR REPLACE calculate_album_duration(album_id UUID)
+    CREATE OR REPLACE FUNCTION calculate_album_duration(album_id UUID)
     RETURNS INTEGER AS $$
     DECLARE 
-      total_duration INTEGER
+      total_duration INTEGER;
     BEGIN
       SELECT SUM(duration) INTO total_duration
       FROM tracks
-      WHERE tracks.album_id = album_id
-      RETURN COALESCE(total_duration, 0)
+      WHERE tracks.album_id = album_id;
+      RETURN COALESCE(total_duration, 0);
     END
     $$ LANGUAGE plpgsql;`
 
