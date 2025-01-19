@@ -1,4 +1,4 @@
-import redis from 'redis';
+const redis = require('redis')
 
 const client = redis.createClient({
     host: 'redis://red-cu1um85svqrc73f0h25g:6379',
@@ -13,4 +13,4 @@ client.on('error',(error) => {
     console.log('Error while connecting to Redis: ', error)
 })
 
-export default client;
+module.exports = client;
