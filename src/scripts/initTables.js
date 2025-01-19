@@ -67,7 +67,7 @@ const initTables = async () => {
 
     const createTriggerFunction = 
     `CREATE OR REPLACE FUNCTION log_track_changes()
-    RETURN TRIGGER AS $$
+    RETURNS TRIGGER AS $$
     BEGIN
       INSERT INTO track_audit_log(track_id, action)
       values (NEW.track_id, TG_OP);
