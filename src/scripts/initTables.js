@@ -69,8 +69,8 @@ const initTables = async () => {
     `CREATE OR REPLACE FUNCTION log_track_changes()
     RETURNS TRIGGER AS $$
     BEGIN
-      INSERT INTO track_audit_log(track_id, action)
-      values (NEW.track_id, TG_OP);
+      INSERT INTO track_audit_log(log_id, track_id, action)
+      values (gen_random_uuid(), NEW.track_id, TG_OP);
       RETURN NEW;
     END
     $$ LANGUAGE plpgsql;  
