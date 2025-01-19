@@ -8,7 +8,6 @@ const redisClient = require('../config/redis');
 const setAsync = (key, ttl, value) => redisClient.setEx(key, ttl, value);
 const delAsync = (key) => redisClient.del(key);
 
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/'); //save file to uploads
@@ -49,34 +48,33 @@ const getTrackLogs = async (req, res) => {
         });
     }
     try {
-        redisClient.get(cacheKey, async (cachedData) => {
-            if (cachedData) {
-                return res.status(200).json({
-                    status: 200,
-                    data: JSON.parse(cachedData),
-                    message: 'Data retrieved from cache',
-                    error: null
-                })
-            } else {
-                const trackLogs = await TrackModel.getTrackLogs({ limit, offset })
-                if (!tracksLogs || tracksLogs.length === 0) {
-                    return res.status(404).json({
-                        status: 404,
-                        data: null,
-                        message: 'No tracks found.',
-                        error: null,
-                    });
-                }
-                await setAsync(cacheKey, 60, JSON.stringify(trackLogs));
-
-                return res.status(200).json({
-                    status: 200,
-                    data: trackLogs,
-                    message: 'Tracks Logs retrieved successfully.',
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.status(200).json({
+                status: 200,
+                data: JSON.parse(cachedData),
+                message: 'Data retrieved from cache',
+                error: null
+            });
+        } else {
+            const trackLogs = await TrackModel.getTrackLogs({ limit, offset });
+            if (!trackLogs || trackLogs.length === 0) {
+                return res.status(404).json({
+                    status: 404,
+                    data: null,
+                    message: 'No tracks found.',
                     error: null,
                 });
             }
-        })
+            await setAsync(cacheKey, 60, JSON.stringify(trackLogs));
+
+            return res.status(200).json({
+                status: 200,
+                data: trackLogs,
+                message: 'Tracks Logs retrieved successfully.',
+                error: null,
+            });
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({
@@ -101,34 +99,33 @@ const getAllTracks = async (req, res) => {
         });
     }
     try {
-        redisClient.get(cacheKey, async (err, cachedData) => {
-            if (cachedData) {
-                return res.status(200).json({
-                    status: 200,
-                    data: JSON.parse(cachedData),
-                    message: 'Data retrieved from cache',
-                    error: null
-                })
-            } else {
-                const tracks = await TrackModel.getAllTracks({ limit, offset, artist_id, album_id, hidden });
-                if (!tracks || tracks.length === 0) {
-                    return res.status(404).json({
-                        status: 404,
-                        data: null,
-                        message: 'No tracks found.',
-                        error: null,
-                    });
-                }
-                await setAsync(cacheKey, 60, JSON.stringify(tracks));
-
-                return res.status(200).json({
-                    status: 200,
-                    data: tracks,
-                    message: 'Tracks retrieved successfully.',
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return res.status(200).json({
+                status: 200,
+                data: JSON.parse(cachedData),
+                message: 'Data retrieved from cache',
+                error: null
+            });
+        } else {
+            const tracks = await TrackModel.getAllTracks({ limit, offset, artist_id, album_id, hidden });
+            if (!tracks || tracks.length === 0) {
+                return res.status(404).json({
+                    status: 404,
+                    data: null,
+                    message: 'No tracks found.',
                     error: null,
                 });
             }
-        })
+            await setAsync(cacheKey, 60, JSON.stringify(tracks));
+
+            return res.status(200).json({
+                status: 200,
+                data: tracks,
+                message: 'Tracks retrieved successfully.',
+                error: null,
+            });
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({
