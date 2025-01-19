@@ -5,8 +5,8 @@ const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
 
 router.get('/', trackController.getAllTracks);
+router.get('/logs', authenticate, trackController.getTrackLogs);
 router.get('/:id', trackController.getTrackById);
-router.get('/logs', authenticate,trackController.getTrackLogs);
 router.post('/add-track', authenticate, authorize(['Admin', 'Editor']), trackController.addTrack);
 router.put('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.updateTrack);
 router.delete('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.deleteTrack);

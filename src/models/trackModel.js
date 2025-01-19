@@ -75,7 +75,6 @@ const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
 
 const getTrackById = async (id) => {
     const query = `
-        // EXPLAIN ANALYZE
         SELECT 
             t.track_id, 
             t.name, 
