@@ -14,4 +14,4 @@ client.on('error',(error) => {
     console.log('Error while connecting to Redis: ', error)
 })
 
-module.exports = client;
+export default client;
