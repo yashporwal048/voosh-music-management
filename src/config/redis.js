@@ -1,5 +1,6 @@
 import redis from 'redis';
 
+
 const client = redis.createClient({
     url: 'redis://red-cu1um85svqrc73f0h25g:6379'
 });
