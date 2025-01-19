@@ -120,7 +120,7 @@ const deleteTrack = async (id) => {
 
 const getTrackLogs = async({limit, offset}) => {
     const query = `
-        SELECT tl.track_id, tl.action, tl.timestamp, tl.name as track_name
+        SELECT tl.track_id, tl.action, tl.timestamp
         FROM track_audit_log tl
         LIMIT $1
         OFFSET $2;`
