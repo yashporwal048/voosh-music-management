@@ -6,7 +6,7 @@ const path = require('path');
 const redisClient = require('../config/redis');
 // const getAsync = promisify(client.get).bind(client);
 const { promisify } = require('util');
-const setAsync = promisify(redisClient.setex).bind(redisClient);
+const setAsync = promisify(redisClient.setEx).bind(redisClient);
 const delAsync = promisify(redisClient.del).bind(redisClient)
 
 
