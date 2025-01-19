@@ -6,8 +6,10 @@ const router = express.Router();
 
 router.get('/', authenticate, albumController.getAllAlbums);
 router.get('/:id', authenticate, albumController.getAlbumById);
-router.post('/add-album', authenticate, authorize(['Admin','Editor']),albumController.addAlbum);
-router.put('/:id', authenticate, authorize(['Admin','Editor']),albumController.updateAlbum);
-router.delete('/:id', authenticate,authorize(['Admin','Editor']), albumController.deleteAlbum);
+router.get('/:id', authenticate, albumController.getAlbumDuration);
+router.post('/add-album', authenticate, authorize(['Admin', 'Editor']), albumController.addAlbum);
+router.put('/:id', authenticate, authorize(['Admin', 'Editor']), albumController.updateAlbum);
+router.delete('/:id', authenticate, authorize(['Admin', 'Editor']), albumController.deleteAlbum);
+
 
 module.exports = router;

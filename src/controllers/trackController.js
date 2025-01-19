@@ -35,6 +35,59 @@ const importTracks = (req, res) => {
         })
 }
 
+
+const getTrackLogs = async (req, res) => {
+    const { limit = 5, offset = 0 } = req.query;
+    const cacheKey = `trackLogs:${limit}:${offset}`;
+
+    if (isNaN(limit) || isNaN(offset)) {
+        return res.status(400).json({
+            status: 400,
+            data: null,
+            message: 'Bad Request: limit and offset must be numeric.',
+            error: null,
+        });
+    }
+    try {
+        redisClient.get(cacheKey, async (cachedData) => {
+            if (cachedData) {
+                return res.status(200).json({
+                    status: 200,
+                    data: JSON.parse(cachedData),
+                    message: 'Data retrieved from cache',
+                    error: null
+                })
+            } else {
+                const trackLogs = await TrackModel.getTrackLogs({ limit, offset })
+                if (!tracksLogs || tracksLogs.length === 0) {
+                    return res.status(404).json({
+                        status: 404,
+                        data: null,
+                        message: 'No tracks found.',
+                        error: null,
+                    });
+                }
+                await setAsync(cacheKey, 60, JSON.stringify(trackLogs));
+
+                return res.status(200).json({
+                    status: 200,
+                    data: trackLogs,
+                    message: 'Tracks Logs retrieved successfully.',
+                    error: null,
+                });
+            }
+        })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: 500,
+            data: null,
+            message: 'Server Error',
+            error: error.message,
+        });
+    }
+}
+
 const getAllTracks = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, album_id, hidden } = req.query;
     const cacheKey = `tracks:${limit}:${offset}:${artist_id || ''}:${album_id || ''}:${hidden || ''}`;
@@ -248,5 +301,6 @@ module.exports = {
     updateTrack,
     deleteTrack,
     importTracks,
-    upload
+    upload,
+    getTrackLogs
 };

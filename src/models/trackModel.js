@@ -75,7 +75,7 @@ const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
 
 const getTrackById = async (id) => {
     const query = `
-        EXPLAIN ANALYZE
+        // EXPLAIN ANALYZE
         SELECT 
             t.track_id, 
             t.name, 
@@ -100,6 +100,7 @@ const addTrack = async ({ artist_id, album_id, name, duration, hidden }) => {
     await pool.query(query, [artist_id, album_id, name, duration, hidden]);
 };
 
+
 const updateTrack = async (id, updates) => {
     const fields = Object.keys(updates).map((key, index) => `${key} = $${index + 2}`);
     const values = [id, ...Object.values(updates)];
@@ -118,6 +119,16 @@ const deleteTrack = async (id) => {
     return result.rowCount > 0;
 };
 
+const getTrackLogs = async({limit, offset}) => {
+    const query = `
+        SELECT tl.track_id, tl.action, tl.created_at, t.name as track_name
+        FROM track_audit_log tl
+        LIMIT $1
+        OFFSET $2;`
+    const {rows} = await pool.query(query, [limit, offset])
+    return rows[0];
+}
+
 module.exports = {
     importTracksFromCsv,
     getAllTracks,
@@ -125,4 +136,5 @@ module.exports = {
     addTrack,
     updateTrack,
     deleteTrack,
+    getTrackLogs
 };

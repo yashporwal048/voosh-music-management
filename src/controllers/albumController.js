@@ -203,10 +203,44 @@ const deleteAlbum = async (req, res) => {
     }
 };
 
+const getAlbumDuration = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const album = await albumModel.getAlbumById(id);
+        if (!album) {
+            return res.status(404).json({
+                status: 404,
+                data: null,
+                message: 'Album not found.',
+                error: null,
+            });
+        }
+
+        const totalDuration = await albumModel.getAlbumDuration(id);
+
+        return res.status(200).json({
+            status: 200,
+            data: { duration: totalDuration },
+            message: 'Album duration retrieved successfully.',
+            error: null,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: 500,
+            data: null,
+            message: 'Server Error',
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     getAllAlbums,
     getAlbumById,
     addAlbum,
     updateAlbum,
     deleteAlbum,
+    getAlbumDuration
 };

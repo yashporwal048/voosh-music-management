@@ -57,6 +57,45 @@ const initTables = async () => {
       );
     `;
 
+    const createTrackLogTable = 
+    `CREATE TABLE IF NOT EXISTS track_audit_log(
+    log_id UUID PRIMARY KEY,
+    track_id UUID NOT NULL REFERENCES tracks(track_id) ON DELETE CASCADE,
+    action VARCHAR(50) NOT NULL CHECK (action IN ('INSERT', 'UPDATE', 'DELETE')),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`
+
+    const createTriggerFunction = 
+    `CREATE OR REPLACE FUNCTION log_track_changes()
+    RETURN TRIGGER AS $$
+    BEGIN
+      INSERT INTO track_audit_log(track_id, action)
+      values (NEW.track_id, TG_OP);
+      RETURN NEW;
+    END
+    $$ LANGUAGE plpgsql;  
+    `
+
+    const createTrigger = `
+    CREATE TRIGGER track_changes_trigger
+    AFTER INSERT OR UPDATE OR DELETE ON tracks
+    FOR EACH ROW
+    EXECUTE FUNCTION log_track_changes();
+    `
+
+    const createProcedureForTotalDuration = `
+    CREATE OR REPLACE calculate_album_duration(album_id UUID)
+    RETURNS INTEGER AS $$
+    DECLARE 
+      total_duration INTEGER
+    BEGIN
+      SELECT SUM(duration) INTO total_duration
+      FROM tracks
+      WHERE tracks.album_id = album_id
+      RETURN COALESCE(total_duration, 0)
+    END
+    $$ LANGUAGE plpgsql;`
+
     // Index creation queries
     const createIndexes = [
       `CREATE INDEX IF NOT EXISTS idx_tracks_track_id ON tracks (track_id);`,
@@ -71,6 +110,10 @@ const initTables = async () => {
     await pool.query(createAlbumsTable);
     await pool.query(createTracksTable);
     await pool.query(createFavoritesTable);
+    await pool.query(createTrackLogTable);
+    await pool.query(createTriggerFunction);
+    await pool.query(createTrigger);
+    await pool.query(createProcedureForTotalDuration)
 
     // Execute index creation
     for (const indexQuery of createIndexes) {

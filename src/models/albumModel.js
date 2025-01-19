@@ -96,6 +96,10 @@ const checkAlbumExists = async (album_id) => {
     const { rows } = await pool.query(query, [album_id]);
     return rows.length > 0;
 };
+const getAlbumDuration = async(album_id) => {
+    const result = pool.query('SELECT calculate_album_duration($1)', [album_id])
+    return result.rows[0].calculate_album_duration;
+}
 
 module.exports = {
     getAllAlbums,
@@ -103,5 +107,6 @@ module.exports = {
     addAlbum,
     updateAlbum,
     deleteAlbum,
-    checkAlbumExists
+    checkAlbumExists,
+    getAlbumDuration
 };
