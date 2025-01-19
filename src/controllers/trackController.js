@@ -3,10 +3,10 @@ const artistModel = require('../models/artistModel');
 const albumModel = require('../models/albumModel');
 const multer = require('multer');
 const path = require('path');
-const redisClient = require('../config/redis');
+const {setAsync, delAsync} = require('../config/redis');
 // const getAsync = promisify(client.get).bind(client);
-const setAsync = (key, ttl, value) => redisClient.setEx(key, ttl, value);
-const delAsync = (key) => redisClient.del(key);
+// const setAsync = (key, ttl, value) => redisClient.setEx(key, ttl, value);
+// const delAsync = (key) => redisClient.del(key);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
