@@ -59,7 +59,7 @@ const initTables = async () => {
 
     const createTrackLogTable = 
     `CREATE TABLE IF NOT EXISTS track_audit_log(
-    log_id UUID PRIMARY KEY,
+    log_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     track_id UUID NOT NULL REFERENCES tracks(track_id) ON DELETE CASCADE,
     action VARCHAR(50) NOT NULL CHECK (action IN ('INSERT', 'UPDATE', 'DELETE')),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
