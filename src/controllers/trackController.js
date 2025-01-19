@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const redisClient = require('../config/redis');
 // const getAsync = promisify(client.get).bind(client);
+const { promisify } = require('util');
 const setAsync = promisify(client.setex).bind(client);
 const delAsync = promisify(client.del).bind(client)
 
