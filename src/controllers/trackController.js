@@ -6,8 +6,8 @@ const path = require('path');
 const redisClient = require('../config/redis');
 // const getAsync = promisify(client.get).bind(client);
 const { promisify } = require('util');
-const setAsync = promisify(client.setex).bind(client);
-const delAsync = promisify(client.del).bind(client)
+const setAsync = promisify(redisClient.setex).bind(redisClient);
+const delAsync = promisify(redisClient.del).bind(redisClient)
 
 
 const storage = multer.diskStorage({
