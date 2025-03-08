@@ -1,5 +1,6 @@
-const pool = require('../config/database');
-const getArtists = async ({ limit, offset, filters }) => {
+import pool from '../config/database';
+
+export const getArtists = async ({ limit, offset, filters }) => {
     const conditions = [];
     const values = [];
 
@@ -25,14 +26,13 @@ const getArtists = async ({ limit, offset, filters }) => {
     return rows;
 };
 
-
-const getArtistById = async (id) => {
+export const getArtistById = async (id) => {
     const query = `SELECT artist_id, name, grammy, hidden FROM artists WHERE artist_id = $1;`;
     const { rows } = await pool.query(query, [id]);
     return rows[0];
 };
 
-const addArtist = async ({ name, grammy, hidden }) => {
+export const addArtist = async ({ name, grammy, hidden }) => {
     const query = `
         INSERT INTO artists (name, grammy, hidden) 
         VALUES ($1, $2, $3) RETURNING artist_id;
@@ -41,7 +41,7 @@ const addArtist = async ({ name, grammy, hidden }) => {
     return rows[0];
 };
 
-const updateArtist = async (id, updates) => {
+export const updateArtist = async (id, updates) => {
     const fields = [];
     const values = [];
 
@@ -60,14 +60,14 @@ const updateArtist = async (id, updates) => {
     return rowCount > 0;
 };
 
-const deleteArtist = async (id) => {
+export const deleteArtist = async (id) => {
     const query = `DELETE FROM artists WHERE artist_id = $1 RETURNING *;`;
     const { rows } = await pool.query(query, [id]);
     return rows[0];
 };
-const checkArtistExists = async (artist_id) => {
+
+export const checkArtistExists = async (artist_id) => {
     const query = `SELECT 1 FROM artists WHERE artist_id = $1 LIMIT 1;`;
     const result = await pool.query(query, [artist_id]);
     return result.rowCount > 0;
 };
-module.exports = { getArtists, getArtistById, addArtist, updateArtist, deleteArtist, checkArtistExists }

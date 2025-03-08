@@ -1,6 +1,6 @@
-const artistModel = require('../models/artistModel');
+import artistModel from '../models/artistModel.js';
 
-const getArtists = async (req, res) => {
+export const getArtists = async (req, res) => {
     try {
         const { limit = 5, offset = 0, grammy, hidden } = req.query;
         if (isNaN(limit) || isNaN(offset)) {
@@ -18,18 +18,18 @@ const getArtists = async (req, res) => {
             data: artists,
             message: 'Artists retrieved successfully',
             error: null
-        })
+        });
     } catch (error) {
         res.status(500).json({
             status: 500,
             data: null,
             message: 'Server Error.',
             error: error.message,
-        })
+        });
     }
-}
+};
 
-const getArtistById = async (req, res) => {
+export const getArtistById = async (req, res) => {
     try {
         const { id } = req.params;
         const artist = await artistModel.getArtistById(id);
@@ -57,9 +57,9 @@ const getArtistById = async (req, res) => {
             error: null,
         });
     }
-}
+};
 
-const addArtist = async (req, res) => {
+export const addArtist = async (req, res) => {
     try {
         const { name, grammy, hidden } = req.body;
         if (!name || grammy === undefined || hidden === undefined) {
@@ -86,9 +86,9 @@ const addArtist = async (req, res) => {
             error: null,
         });
     }
-}
+};
 
-const updateArtist = async (req, res) => {
+export const updateArtist = async (req, res) => {
     try {
         const { id } = req.params;
         const updates = req.body;
@@ -134,7 +134,7 @@ const updateArtist = async (req, res) => {
     }
 };
 
-const deleteArtist = async (req, res) => {
+export const deleteArtist = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -165,5 +165,3 @@ const deleteArtist = async (req, res) => {
         });
     }
 };
-
-module.exports = { getArtists, getArtistById, addArtist, updateArtist, deleteArtist }

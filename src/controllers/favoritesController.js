@@ -1,7 +1,7 @@
-const FavoritesModel = require('../models/favoritesModel');
-const eventEmitter = require('../config/events')
+import FavoritesModel from '../models/favoritesModel.js';
+import eventEmitter from '../config/events.js';
 
-const getFavorites = async (req, res) => {
+export const getFavorites = async (req, res) => {
     const { category } = req.params;
     const { limit = 5, offset = 0 } = req.query;
     const userId = req.user.user_id;
@@ -44,7 +44,7 @@ const getFavorites = async (req, res) => {
     }
 };
 
-const addFavorite = async (req, res) => {
+export const addFavorite = async (req, res) => {
     const { category, item_id } = req.body;
     const userId = req.user.user_id;
 
@@ -70,7 +70,6 @@ const addFavorite = async (req, res) => {
 
         await FavoritesModel.addFavorite({ userId, category, item_id });
 
-
         res.status(201).json({
             status: 201,
             data: null,
@@ -89,8 +88,7 @@ const addFavorite = async (req, res) => {
     }
 };
 
-
-const removeFavorite = async (req, res) => {
+export const removeFavorite = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -122,10 +120,4 @@ const removeFavorite = async (req, res) => {
             error: error.message,
         });
     }
-};
-
-module.exports = {
-    getFavorites,
-    addFavorite,
-    removeFavorite,
 };

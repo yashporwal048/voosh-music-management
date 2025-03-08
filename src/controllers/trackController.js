@@ -1,9 +1,9 @@
-const TrackModel = require('../models/trackModel');
-const artistModel = require('../models/artistModel');
-const albumModel = require('../models/albumModel');
-const multer = require('multer');
-const path = require('path');
-const {setAsync, delAsync, redisClient} = require('../config/redis');
+import TrackModel from '../models/trackModel.js';
+import artistModel from '../models/artistModel.js';
+import albumModel from '../models/albumModel.js';
+import multer from 'multer';
+import path from 'path';
+import { setAsync, delAsync, redisClient } from '../config/redis.js';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -12,11 +12,11 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname)); // Unique file names
     },
-})
+});
 
 const upload = multer({ storage: storage });
 
-const importTracks = (req, res) => {
+export const importTracks = (req, res) => {
     const { file } = req;
 
     if (!file) {
@@ -25,14 +25,13 @@ const importTracks = (req, res) => {
 
     TrackModel.importTracksFromCSV(file.path)
         .then((message) => {
-            res.status(200).json({ message })
+            res.status(200).json({ message });
         }).catch((error) => {
-            res.status(500).json({ error: 'Failed to import tracks', message: error.message }); x
-        })
-}
+            res.status(500).json({ error: 'Failed to import tracks', message: error.message });
+        });
+};
 
-
-const getTrackLogs = async (req, res) => {
+export const getTrackLogs = async (req, res) => {
     const { limit = 5, offset = 0 } = req.query;
     const cacheKey = `trackLogs:${limit}:${offset}`;
 
@@ -81,9 +80,9 @@ const getTrackLogs = async (req, res) => {
             error: error.message,
         });
     }
-}
+};
 
-const getAllTracks = async (req, res) => {
+export const getAllTracks = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, album_id, hidden } = req.query;
     const cacheKey = `tracks:${limit}:${offset}:${artist_id || ''}:${album_id || ''}:${hidden || ''}`;
 
@@ -134,7 +133,7 @@ const getAllTracks = async (req, res) => {
     }
 };
 
-const getTrackById = async (req, res) => {
+export const getTrackById = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -165,7 +164,7 @@ const getTrackById = async (req, res) => {
     }
 };
 
-const addTrack = async (req, res) => {
+export const addTrack = async (req, res) => {
     const { artist_id, album_id, name, duration, hidden } = req.body;
 
     try {
@@ -210,8 +209,7 @@ const addTrack = async (req, res) => {
     }
 };
 
-
-const updateTrack = async (req, res) => {
+export const updateTrack = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
@@ -236,7 +234,7 @@ const updateTrack = async (req, res) => {
                 error: null,
             });
         }
-        const cacheKey = `tracks:*`
+        const cacheKey = `tracks:*`;
         await delAsync(cacheKey);
 
         return res.status(204).json({
@@ -256,8 +254,7 @@ const updateTrack = async (req, res) => {
     }
 };
 
-
-const deleteTrack = async (req, res) => {
+export const deleteTrack = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -288,13 +285,6 @@ const deleteTrack = async (req, res) => {
     }
 };
 
-module.exports = {
-    getAllTracks,
-    getTrackById,
-    addTrack,
-    updateTrack,
-    deleteTrack,
-    importTracks,
-    upload,
-    getTrackLogs
+export const trackController = {
+    upload
 };

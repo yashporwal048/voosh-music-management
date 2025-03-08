@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import trackController from '../controllers/trackController.js';
+import authenticate from '../middlewares/authenticate.js';
+import authorize from '../middlewares/authorize.js';
+
 const router = express.Router();
-const trackController = require('../controllers/trackController');
-const authenticate = require('../middlewares/authenticate');
-const authorize = require('../middlewares/authorize');
 
 router.get('/', trackController.getAllTracks);
 router.get('/logs', authenticate, trackController.getTrackLogs);
@@ -12,4 +13,4 @@ router.put('/:id', authenticate, authorize(['Admin', 'Editor']), trackController
 router.delete('/:id', authenticate, authorize(['Admin', 'Editor']), trackController.deleteTrack);
 router.post('/import-tracks', authenticate, authorize(['Admin', 'Editor']), trackController.upload.single('csvFile'), trackController.importTracks);
 
-module.exports = router;
+export default router;

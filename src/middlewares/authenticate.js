@@ -1,5 +1,8 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config(); 
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const authenticate = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -12,14 +15,14 @@ const authenticate = (req, res, next) => {
         });
     }
 
-    const token = authHeader.split(' ')[1]; 
+    const token = authHeader.split(' ')[1];
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         req.user = decoded;
 
-        next(); 
+        next();
     } catch (error) {
         return res.status(401).json({
             status: 401,
@@ -30,4 +33,4 @@ const authenticate = (req, res, next) => {
     }
 };
 
-module.exports = authenticate;
+export default authenticate;

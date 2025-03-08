@@ -1,8 +1,8 @@
-const UserModel = require('../models/userModel');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import UserModel from '../models/userModel.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-const signupUser = async (req, res) => {
+export const signupUser = async (req, res) => {
     const { email, password, role } = req.body;
 
     // Validate required fields
@@ -55,8 +55,7 @@ const signupUser = async (req, res) => {
     }
 };
 
-
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // Validate request body
@@ -115,7 +114,7 @@ const loginUser = async (req, res) => {
     }
 };
 
-const logoutUser = async (req, res) => {
+export const logoutUser = async (req, res) => {
     // Get token from Authorization header
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -148,4 +147,3 @@ const logoutUser = async (req, res) => {
         });
     }
 };
-module.exports = { signupUser, loginUser, logoutUser };

@@ -1,7 +1,8 @@
-const express = require('express');
-const albumController = require('../controllers/albumController');
-const authenticate = require('../middlewares/authenticate');
-const authorize = require('../middlewares/authorize')
+import express from 'express';
+import albumController from '../controllers/albumController.js';
+import authenticate from '../middlewares/authenticate.js';
+import authorize from '../middlewares/authorize.js';
+
 const router = express.Router();
 
 router.get('/', authenticate, albumController.getAllAlbums);
@@ -11,5 +12,4 @@ router.post('/add-album', authenticate, authorize(['Admin', 'Editor']), albumCon
 router.put('/:id', authenticate, authorize(['Admin', 'Editor']), albumController.updateAlbum);
 router.delete('/:id', authenticate, authorize(['Admin', 'Editor']), albumController.deleteAlbum);
 
-
-module.exports = router;
+export default router;

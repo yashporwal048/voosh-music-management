@@ -1,19 +1,19 @@
-import redis from 'redis';
+import { createClient } from 'redis';
 
-
-const redisClient = redis.createClient({
+const redisClient = createClient({
     url: 'redis://red-cu1um85svqrc73f0h25g:6379'
 });
 
 redisClient.connect().catch(console.error);
 
 redisClient.on('connect', () => {
-    console.log('Redis Connected')
-})
+    console.log('Redis Connected');
+});
 
 redisClient.on('error', (error) => {
-    console.log('Error while connecting to Redis: ', error)
-})
+    console.log('Error while connecting to Redis: ', error);
+});
+
 const setAsync = async (key, ttl, value) => {
     try {
         await redisClient.setEx(key, ttl, value);

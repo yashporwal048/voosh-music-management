@@ -1,12 +1,10 @@
-const AlbumModel = require('../models/albumModel');
-const artistModel = require('../models/artistModel');
-const {kafka, producer} =  require('../config/kafka.js');
+import AlbumModel from '../models/albumModel.js';
+import artistModel from '../models/artistModel.js';
+import { kafka, producer } from '../config/kafka.js';
 
 await producer.connect();
 
-
-
-const getAllAlbums = async (req, res) => {
+export const getAllAlbums = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, hidden } = req.query;
 
     if (isNaN(limit) || isNaN(offset)) {
@@ -74,7 +72,7 @@ const getAllAlbums = async (req, res) => {
     }
 };
 
-const getAlbumById = async (req, res) => {
+export const getAlbumById = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -105,9 +103,8 @@ const getAlbumById = async (req, res) => {
     }
 };
 
-const addAlbum = async (req, res) => {
+export const addAlbum = async (req, res) => {
     const { artist_id, name, year, hidden } = req.body;
-
 
     if (!artist_id || !name || !year) {
         return res.status(400).json({
@@ -123,7 +120,7 @@ const addAlbum = async (req, res) => {
         await producer.send({
             topic: 'new-album',
             messages: [{
-                value: JSON.stringify({event: 'New Album Added', album: newAlbum.name})
+                value: JSON.stringify({ event: 'New Album Added', album: newAlbum.name })
             }]
         });
         return res.status(201).json({
@@ -144,7 +141,7 @@ const addAlbum = async (req, res) => {
     }
 };
 
-const updateAlbum = async (req, res) => {
+export const updateAlbum = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     Object.keys(updates).forEach((key) => {
@@ -185,7 +182,7 @@ const updateAlbum = async (req, res) => {
     }
 };
 
-const deleteAlbum = async (req, res) => {
+export const deleteAlbum = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -216,7 +213,7 @@ const deleteAlbum = async (req, res) => {
     }
 };
 
-const getAlbumDuration = async (req, res) => {
+export const getAlbumDuration = async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -247,13 +244,4 @@ const getAlbumDuration = async (req, res) => {
             error: error.message,
         });
     }
-};
-
-module.exports = {
-    getAllAlbums,
-    getAlbumById,
-    addAlbum,
-    updateAlbum,
-    deleteAlbum,
-    getAlbumDuration
 };

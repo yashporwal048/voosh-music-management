@@ -1,7 +1,7 @@
-const pool = require('../config/database');
+import pool from '../config/database.js';
 
 // Function to create a new user
-const createUser = async (email, password, role) => {
+export const createUser = async (email, password, role) => {
     const query = `
         INSERT INTO users (email, password, role) 
         VALUES ($1, $2, $3) 
@@ -17,7 +17,7 @@ const createUser = async (email, password, role) => {
 };
 
 // Function to get a user by email
-const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email) => {
     const query = 'SELECT * FROM users WHERE email = $1';
     try {
         const result = await pool.query(query, [email]);
@@ -28,7 +28,7 @@ const getUserByEmail = async (email) => {
 };
 
 // Function to get the total number of users
-const getUserCount = async () => {
+export const getUserCount = async () => {
     const query = 'SELECT COUNT(*) AS count FROM users';
     try {
         const result = await pool.query(query);
@@ -38,7 +38,7 @@ const getUserCount = async () => {
     }
 };
 
-const getUsers = async ({ limit, offset, role }) => {
+export const getUsers = async ({ limit, offset, role }) => {
     let query = 'SELECT * FROM users';
     const values = [];
     let counter = 1;
@@ -52,11 +52,11 @@ const getUsers = async ({ limit, offset, role }) => {
         const result = await pool.query(query, values);
         return result.rows;
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
 
-const deleteUserById = async (id) => {
+export const deleteUserById = async (id) => {
     const query = 'DELETE FROM users WHERE user_id = $1';
     try {
         const result = await pool.query(query, [id]);
@@ -64,15 +64,14 @@ const deleteUserById = async (id) => {
     } catch (error) {
         throw error;
     }
-}
+};
 
-const updateUser = async (email, newPassword) => {
-    const query = 'Update users SET password = $1 where email = $2 RETURNING *';
+export const updateUser = async (email, newPassword) => {
+    const query = 'UPDATE users SET password = $1 WHERE email = $2 RETURNING *';
     try {
         const result = await pool.query(query, [newPassword, email]);
         return result.rows[0];
     } catch (error) {
         throw error;
     }
-}
-module.exports = { createUser, getUserByEmail, getUserCount, getUsers, deleteUserById, updateUser };
+};

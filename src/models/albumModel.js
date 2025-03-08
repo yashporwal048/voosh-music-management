@@ -1,6 +1,6 @@
-const pool = require('../config/database');
+import pool from '../config/database';
 
-const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
+export const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
     const conditions = [];
     const values = [];
     if (artist_id) {
@@ -30,8 +30,7 @@ const getAllAlbums = async ({ limit, offset, artist_id, hidden }) => {
     return rows;
 };
 
-
-const getAlbumById = async (id) => {
+export const getAlbumById = async (id) => {
     const query = `
         SELECT 
             a.album_id, 
@@ -47,8 +46,7 @@ const getAlbumById = async (id) => {
     return rows[0];
 };
 
-
-const addAlbum = async ({ artist_id, name, year, hidden }) => {
+export const addAlbum = async ({ artist_id, name, year, hidden }) => {
     const query = `
         INSERT INTO albums (artist_id, name, year, hidden) 
         VALUES ($1, $2, $3, $4) 
@@ -58,7 +56,7 @@ const addAlbum = async ({ artist_id, name, year, hidden }) => {
     return rows[0];
 };
 
-const updateAlbum = async (id, update) => {
+export const updateAlbum = async (id, update) => {
     const updates = [];
     const values = [];
     const { name, year, hidden } = update;
@@ -85,28 +83,19 @@ const updateAlbum = async (id, update) => {
     return result.rowCount > 0;
 };
 
-const deleteAlbum = async (id) => {
+export const deleteAlbum = async (id) => {
     const query = `DELETE FROM albums WHERE album_id = $1 RETURNING *;`;
     const { rows } = await pool.query(query, [id]);
     return rows[0];
 };
 
-const checkAlbumExists = async (album_id) => {
+export const checkAlbumExists = async (album_id) => {
     const query = `SELECT album_id FROM albums WHERE album_id = $1;`;
     const { rows } = await pool.query(query, [album_id]);
     return rows.length > 0;
 };
-const getAlbumDuration = async(album_id) => {
-    const result = pool.query('SELECT calculate_album_duration($1)', [album_id])
-    return result.rows[0].calculate_album_duration;
-}
 
-module.exports = {
-    getAllAlbums,
-    getAlbumById,
-    addAlbum,
-    updateAlbum,
-    deleteAlbum,
-    checkAlbumExists,
-    getAlbumDuration
+export const getAlbumDuration = async (album_id) => {
+    const result = await pool.query('SELECT calculate_album_duration($1)', [album_id]);
+    return result.rows[0].calculate_album_duration;
 };

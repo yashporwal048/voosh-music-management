@@ -1,9 +1,9 @@
-const pool = require('../config/database');
-const fs = require('fs');
-const csv = require('csv-parser');
-const redisClient = require('../config/redis')
+import pool from '../config/database.js';
+import fs from 'fs';
+import csv from 'csv-parser';
+import redisClient from '../config/redis.js';
 
-const importTracksFromCsv = (filePath) => {
+export const importTracksFromCsv = (filePath) => {
     const results = [];
 
     fs.createReadStream(filePath)
@@ -15,12 +15,12 @@ const importTracksFromCsv = (filePath) => {
                 name: row.name,
                 duration: parseInt(row.duration),
                 hidden: row.hidden === 'true', // Assume hidden is a boolean value
-            })
+            });
 
         })
         .on('end', async () => {
             try {
-                for (let track of result) {
+                for (let track of results) {
                     const query = `
                     INSERT INTO tracks (artist_id, album_id, name, duration, hidden)
                     VALUES ($1, $2, $3, $4, $5);
@@ -35,9 +35,9 @@ const importTracksFromCsv = (filePath) => {
         .on('error', (err) => {
             reject(err);
         });
-}
+};
 
-const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
+export const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
     const conditions = [];
     const values = [];
     if (artist_id) {
@@ -73,7 +73,7 @@ const getAllTracks = async ({ limit, offset, artist_id, album_id, hidden }) => {
     return rows;
 };
 
-const getTrackById = async (id) => {
+export const getTrackById = async (id) => {
     const query = `
         SELECT 
             t.track_id, 
@@ -91,7 +91,7 @@ const getTrackById = async (id) => {
     return rows[0];
 };
 
-const addTrack = async ({ artist_id, album_id, name, duration, hidden }) => {
+export const addTrack = async ({ artist_id, album_id, name, duration, hidden }) => {
     const query = `
         INSERT INTO tracks (artist_id, album_id, name, duration, hidden)
         VALUES ($1, $2, $3, $4, $5);
@@ -99,8 +99,7 @@ const addTrack = async ({ artist_id, album_id, name, duration, hidden }) => {
     await pool.query(query, [artist_id, album_id, name, duration, hidden]);
 };
 
-
-const updateTrack = async (id, updates) => {
+export const updateTrack = async (id, updates) => {
     const fields = Object.keys(updates).map((key, index) => `${key} = $${index + 2}`);
     const values = [id, ...Object.values(updates)];
     const query = `
@@ -112,28 +111,18 @@ const updateTrack = async (id, updates) => {
     return result.rowCount > 0;
 };
 
-const deleteTrack = async (id) => {
+export const deleteTrack = async (id) => {
     const query = `DELETE FROM tracks WHERE track_id = $1;`;
     const result = await pool.query(query, [id]);
     return result.rowCount > 0;
 };
 
-const getTrackLogs = async({limit, offset}) => {
+export const getTrackLogs = async ({ limit, offset }) => {
     const query = `
         SELECT tl.track_id, tl.action, tl.timestamp
         FROM track_audit_log tl
         LIMIT $1
         OFFSET $2;`
-    const {rows} = await pool.query(query, [limit, offset])
+    const { rows } = await pool.query(query, [limit, offset]);
     return rows[0];
-}
-
-module.exports = {
-    importTracksFromCsv,
-    getAllTracks,
-    getTrackById,
-    addTrack,
-    updateTrack,
-    deleteTrack,
-    getTrackLogs
 };
