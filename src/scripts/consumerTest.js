@@ -1,5 +1,5 @@
-import { consumeMessages } from "../config/kafka.js";
+const { consumeMessages } = require("../config/kafka.js");
 
 (async () => {
-  await consumeMessages("test-topic");
+    await consumeMessages("test-topic");
 })();

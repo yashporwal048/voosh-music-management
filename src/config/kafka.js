@@ -1,4 +1,4 @@
-import {Kafka} from 'kafkajs';
+const {Kafka} =  require('kafkajs');
 
 const kafka = new Kafka({
     clientId: 'music-library',

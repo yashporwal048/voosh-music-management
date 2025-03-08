@@ -1,6 +1,6 @@
 const AlbumModel = require('../models/albumModel');
 const artistModel = require('../models/artistModel');
-import {kafka, producer} from '../config/kafka.js';
+const {kafka, producer} =  require('../config/kafka.js');
 
 await producer.connect();
 
