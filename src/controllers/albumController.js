@@ -1,5 +1,10 @@
 const AlbumModel = require('../models/albumModel');
 const artistModel = require('../models/artistModel');
+import {kafka, producer} from '../config/kafka.js';
+
+await producer.connect();
+
+
 
 const getAllAlbums = async (req, res) => {
     const { limit = 5, offset = 0, artist_id, hidden } = req.query;
@@ -103,6 +108,7 @@ const getAlbumById = async (req, res) => {
 const addAlbum = async (req, res) => {
     const { artist_id, name, year, hidden } = req.body;
 
+
     if (!artist_id || !name || !year) {
         return res.status(400).json({
             status: 400,
@@ -114,12 +120,19 @@ const addAlbum = async (req, res) => {
 
     try {
         const newAlbum = await AlbumModel.addAlbum({ artist_id, name, year, hidden });
+        await producer.send({
+            topic: 'new-album',
+            messages: [{
+                value: JSON.stringify({event: 'New Album Added', album: newAlbum.name})
+            }]
+        });
         return res.status(201).json({
             status: 201,
             data: null,
             message: 'Album created successfully.',
             error: null,
         });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({
